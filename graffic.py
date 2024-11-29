@@ -1,4 +1,6 @@
+from math import cos, sin
 import os
+from time import time
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
@@ -46,18 +48,18 @@ def load_texture(image_path):
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
     return texture_id
 
-def draw_textured_plane(texture_id, y_coord):
+def draw_textured_plane(texture_id, z_coord, shift_x=0, shift_y=0):
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, texture_id)
     glBegin(GL_QUADS)
     glTexCoord2f(0, 0)
-    glVertex3f(-3, -3, y_coord)
+    glVertex3f(-3 + shift_x, -3 + shift_y, z_coord)
     glTexCoord2f(1, 0)
-    glVertex3f(3, -3, y_coord)
+    glVertex3f(3 + shift_x, -3 + shift_y, z_coord)
     glTexCoord2f(1, 1)
-    glVertex3f(3, 3, y_coord)
+    glVertex3f(3 + shift_x, 3 + shift_y, z_coord)
     glTexCoord2f(0, 1)
-    glVertex3f(-3, 3, y_coord)
+    glVertex3f(-3 + shift_x, 3 + shift_y, z_coord)
     glEnd()
     glDisable(GL_TEXTURE_2D)
 
@@ -76,7 +78,7 @@ def opengl_3d_cube():
     base_speed = 0.15  # Adjust the movement speed here
     ctrl_speed = 0.35  # Adjust the movement speed here
     sensivity = 0.5
-    pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
+    screen = pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     
     glMatrixMode(GL_PROJECTION)
     gluPerspective(45, display[0] / display[1], 0.1, 50.0)
@@ -133,7 +135,10 @@ def opengl_3d_cube():
 
         draw_colored_cube()  
         draw_textured_plane(texture_id, -7)  
-        draw_textured_plane(logo_id, 7)  
+        s_y = 3*sin(time()*3)
+        s_x = 3*cos(time()*3)
+        s_z = (s_y*2 + s_x)/3
+        draw_textured_plane(logo_id, 7 + s_z, s_y, s_x)  
         glPopMatrix()
         
         pygame.display.flip()
