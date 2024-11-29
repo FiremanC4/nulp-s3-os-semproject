@@ -1,6 +1,7 @@
 from tkinter import simpledialog, messagebox
 from hashlib import sha256
 import winreg as wrg 
+from internet_download import force_user_to_accept_user_agreement
 
 _PROGRAM_NAME = 'MySupperProgram'
 _LICENSE_KEY = '4eb007276d92ffcaa700cb422a5ea927e41ad0979cc91d5e0373baea04012e5a' # 'ilovecandy :)' in sha256.hex
@@ -46,6 +47,7 @@ def _user_input_key():
         if answer is None:
             quit()
         if _check_key(answer):
+            force_user_to_accept_user_agreement()
             messagebox.showinfo('Success', 'The program activated!')
             return answer
         messagebox.showerror("Error", "Wrong key!")
