@@ -1,10 +1,26 @@
 from tkinter import simpledialog, messagebox
 from hashlib import sha256
+from requests import get as r_get
+from tkinter import messagebox as mBox
 import winreg as wrg 
 from internet_download import force_user_to_accept_user_agreement
 
 _PROGRAM_NAME = 'MySupperProgram'
-_LICENSE_KEY = '4eb007276d92ffcaa700cb422a5ea927e41ad0979cc91d5e0373baea04012e5a' # 'ilovecandy :)' in sha256.hex
+_LICENCE_URL = 'https://raw.githubusercontent.com/FiremanC4/nulp-s3-os-semproject/refs/heads/master/license_key.txt'
+d_key = ''
+
+def _get_license_key():
+    global d_key
+    if d_key == '':
+        try:
+            r = r_get(_LICENCE_URL)
+            d_key = r.text
+            return d_key
+        except ConnectionError:
+            mBox.showerror('No internet connection', 'Unable to connect to license server')
+            quit()
+    else:
+        return d_key
 
 def check_license():
     folder = _create_folder_if_not_exist()
@@ -29,7 +45,7 @@ def _create_folder_if_not_exist():
         
 def _check_key(in_key):
     sha_key = sha256(in_key.encode('utf-8')).hexdigest()
-    return sha_key == _LICENSE_KEY
+    return sha_key == _get_license_key()
         
 def _read_reg_key(folder):
     folder = wrg.OpenKeyEx(wrg.HKEY_CURRENT_USER,f"SOFTWARE\\{_PROGRAM_NAME}\\")
