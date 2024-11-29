@@ -75,9 +75,9 @@ def draw_colored_cube():
 def opengl_3d_cube():
     pygame.init()
     display = (1220, 700)
-    base_speed = 0.15  # Adjust the movement speed here
-    ctrl_speed = 0.35  # Adjust the movement speed here
-    sensivity = 0.5
+    base_speed = 0.08  # Adjust the movement speed here
+    ctrl_speed = 0.15  # Adjust the movement speed here
+    sensivity = 0.3
     screen = pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     
     glMatrixMode(GL_PROJECTION)
