@@ -1,10 +1,22 @@
 from math import cos, sin
 import os
 from time import time
+import sys
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 FPS = 144
 
 vertices = [
@@ -76,7 +88,7 @@ def opengl_3d_cube():
     pygame.init()
     display = (1220, 700)
     base_speed = 0.08  # Adjust the movement speed here
-    ctrl_speed = 0.15  # Adjust the movement speed here
+    ctrl_speed = 0.35  # Adjust the movement speed here
     sensivity = 0.3
     screen = pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     
@@ -89,8 +101,8 @@ def opengl_3d_cube():
     glMatrixMode(GL_MODELVIEW)
     modelMatrix = glGetFloatv(GL_MODELVIEW_MATRIX)
     
-    texture_id = load_texture("texture.jpg")  # Replace with the path to your image
-    logo_id = load_texture("texture.png")  # Replace with the path to your image
+    texture_id = load_texture(resource_path("texture.jpg"))  # Replace with the path to your image
+    logo_id = load_texture(resource_path("texture.png"))  # Replace with the path to your image
     
     clock = pygame.time.Clock()
     while True:
