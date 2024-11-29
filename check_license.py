@@ -2,23 +2,29 @@ from tkinter import simpledialog, messagebox
 from hashlib import sha256
 from requests import get as r_get
 from tkinter import messagebox as mBox
+from requests.exceptions import ConnectionError
 import winreg as wrg 
 from internet_download import force_user_to_accept_user_agreement
 
 _PROGRAM_NAME = 'MySupperProgram'
-_LICENCE_URL = 'https://raw.githubusercontent.com/FiremanC4/nulp-s3-os-semproject/refs/heads/master/license_key.txt'
+_LICENCE_URL = 'https://raw.githubusercontent.com/FiremanC4/nulp-s3-os-semproject/refs/heads/master/licence_key.txt'
 d_key = ''
+
+def _no_internet_connection():
+    mBox.showerror('No internet connection', 'Unable to connect to licence server')
+    quit()
 
 def _get_license_key():
     global d_key
     if d_key == '':
         try:
             r = r_get(_LICENCE_URL)
+            if r.status_code != 200:
+                _no_internet_connection()
             d_key = r.text
             return d_key
         except ConnectionError:
-            mBox.showerror('No internet connection', 'Unable to connect to license server')
-            quit()
+            _no_internet_connection()
     else:
         return d_key
 
